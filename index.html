@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Payment Villain Mode</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #0d1b2a;
+      color: #ffffff;
+      overflow-x: hidden;
+    }
+    .intro {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background-color: black;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      animation: fadeOut 1s ease 4s forwards;
+    }
+    .intro img {
+      width: 200px;
+      animation: pulse 2s infinite;
+      margin-bottom: 30px;
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+    @keyframes fadeOut {
+      to { opacity: 0; visibility: hidden; }
+    }
+    .loader {
+      width: 200px;
+      height: 10px;
+      background: #333;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+    .loader-bar {
+      height: 100%;
+      width: 0%;
+      background: #00b4d8;
+      animation: loadBar 3s linear forwards;
+    }
+    @keyframes loadBar {
+      0% { width: 0%; }
+      100% { width: 100%; }
+    }
+    .container {
+      display: none;
+      opacity: 0;
+      transform: translateY(30px);
+      animation: contentIn 1s ease forwards;
+      text-align: center;
+      padding: 30px;
+      max-width: 400px;
+      margin: auto;
+      margin-top: 100px;
+      background-color: #1b263b;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.5);
+      position: relative;
+    }
+    @keyframes contentIn {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .menu button {
+      margin: 10px;
+      padding: 10px 20px;
+      background-color: #415a77;
+      border: none;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: transform 0.1s ease;
+    }
+    .menu button:active {
+      transform: scale(0.95);
+    }
+    .menu button:hover {
+      background-color: #778da9;
+    }
+    .result {
+      margin-top: 20px;
+    }
+    .result img {
+      max-width: 150px;
+      margin-bottom: 10px;
+    }
+    .mute-btn {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      background: #415a77;
+      border: none;
+      color: white;
+      padding: 6px 12px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .mute-btn:hover {
+      background-color: #778da9;
+    }
+  </style>
+</head>
+<body>
+  <div class="intro" id="intro">
+    <img src="villain.jpg" alt="Villain Eyes" />
+    <div class="loader">
+      <div class="loader-bar"></div>
+    </div>
+  </div>
+  <div class="container" id="mainContent">
+    <button class="mute-btn" onclick="toggleMute()">
+      🔊 Mute
+    </button>
+    <h1>Metode Pembayaran</h1>
+    <div class="menu">
+      <button onclick="playClick(); showPayment('dana')">Dana</button>
+      <button onclick="playClick(); showPayment('gopay')">Gopay</button>
+      <button onclick="playClick(); showPayment('qris')">QRIS</button>
+    </div>
+    <div class="result" id="result">
+      <p>Pilih salah satu metode pembayaran.</p>
+    </div>
+  </div>
+  <audio id="villainLaugh" src="https://www.myinstants.com/media/sounds/evil-laugh.mp3" preload="auto"></audio>
+  <audio id="villainVoice" src="https://www.myinstants.com/media/sounds/villain-voice-effect.mp3" preload="auto" loop></audio>
+  <audio id="clickSound" src="https://www.myinstants.com/media/sounds/mouse-click.mp3" preload="auto"></audio>
+  <script>
+    const laugh = document.getElementById("villainLaugh");
+    const voice = document.getElementById("villainVoice");
+    const click = document.getElementById("clickSound");
+    const mainContent = document.getElementById("mainContent");
+    const muteBtn = document.querySelector(".mute-btn");
+
+    window.onload = function () {
+      laugh.volume = 0.5;
+      voice.volume = 0.5;
+      laugh.play();
+      setTimeout(() => {
+        document.getElementById("intro").style.display = "none";
+        mainContent.style.display = "block";
+        voice.play();
+      }, 4000);
+    }
+
+    function playClick() {
+      click.currentTime = 0;
+      click.play();
+    }
+
+    function toggleMute() {
+      voice.muted = !voice.muted;
+      muteBtn.innerHTML = voice.muted ? "🔇 Unmute" : "🔊 Mute";
+    }
+
+    function showPayment(method) {
+      const result = document.getElementById("result");
+      let content = '';
+
+      if (method === 'dana') {
+        content = `
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Logo_DANA.svg/512px-Logo_DANA.svg.png" alt="Dana Logo">
+          <p>081234187519</p>
+        `;
+      } else if (method === 'gopay') {
+        content = `
+          <img src="https://play-lh.googleusercontent.com/HtOKODeR-xJZsYQIMv4AZiGCaR9q7jN3NmFl_G_YjGlGEQ4iOP95LFaEqlrxBCEWV-Q=w240-h480" alt="Gopay Logo">
+          <p>081234187519</p>
+        `;
+      } else if (method === 'qris') {
+        content = `<p>Qris orkut error, minta ke dullnotdev</p>`;
+      }
+
+      result.innerHTML = content;
+    }
+  </script>
+</body>
+</html>
