@@ -22,7 +22,7 @@
       justify-content: center;
       align-items: center;
       z-index: 9999;
-      animation: fadeOut 1s ease 4s forwards;
+      animation: fadeOut 1s ease 7s forwards;
     }
     .intro img {
       width: 200px;
@@ -48,7 +48,7 @@
       height: 100%;
       width: 0%;
       background: #00b4d8;
-      animation: loadBar 3s linear forwards;
+      animation: loadBar 7s linear forwards;
     }
     @keyframes loadBar {
       0% { width: 0%; }
@@ -93,10 +93,12 @@
     }
     .result {
       margin-top: 20px;
+      text-align: center;
     }
     .result img {
       max-width: 150px;
-      margin-bottom: 10px;
+      margin: 0 auto 10px;
+      display: block;
     }
     .mute-btn {
       position: absolute;
@@ -130,7 +132,7 @@
       <button onclick="playClick(); showPayment('qris')">QRIS</button>
     </div>
     <div class="result" id="result">
-      <img id="logo" style="display:none" />
+      <img id="logo" style="display:none;" />
       <p id="info-text">Pilih salah satu metode pembayaran.</p>
     </div>
   </div>
@@ -147,7 +149,6 @@
     const mainContent = document.getElementById("mainContent");
     const muteBtn = document.querySelector(".mute-btn");
 
-    // Atur audio setelah interaksi
     window.addEventListener('DOMContentLoaded', function () {
       const prompt = document.createElement("div");
       prompt.innerHTML = "<p style='text-align:center;'>Klik di mana saja untuk memulai suara...</p>";
@@ -162,12 +163,21 @@
         prompt.remove();
         laugh.volume = 0.5;
         voice.volume = 0.5;
+        voice.muted = false;
+
         laugh.play().catch(()=>{});
+
         setTimeout(() => {
           document.getElementById("intro").style.display = "none";
           mainContent.style.display = "block";
-          voice.play().catch(()=>{});
-        }, 4000);
+
+          voice.pause();
+          voice.currentTime = 0;
+          voice.play().catch((e) => {
+            console.warn("voice autoplay failed", e);
+          });
+
+        }, 7000);
       });
     });
 
